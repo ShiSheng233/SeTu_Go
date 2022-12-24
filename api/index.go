@@ -1,4 +1,4 @@
-package main
+package handler
 
 import (
 	"encoding/json"
@@ -6,14 +6,13 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"os"
 )
 
 type RandomPost struct {
 	FileUrl string `json:"file_url"`
 }
 
-func main() {
+func Handler(w http.ResponseWriter, r *http.Request) {
 	http.HandleFunc("/api/setu", func(w http.ResponseWriter, r *http.Request) {
 		tags := r.URL.Query().Get("tags")
 
@@ -63,15 +62,4 @@ func main() {
 
 		http.Redirect(w, r, post.FileUrl, http.StatusFound)
 	})
-
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8080"
-	}
-
-	log.Println("[INFO]\nStarted to listen on http://localhost:" + port)
-	err := http.ListenAndServe(":" + port, nil)
-	if err != nil {
-		return
-	}
 }
