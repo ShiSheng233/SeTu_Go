@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 )
 
 type RandomPost struct {
@@ -63,8 +64,13 @@ func main() {
 		http.Redirect(w, r, post.FileUrl, http.StatusFound)
 	})
 
-	log.Println("[INFO]\nStarted to listen on http://localhost:8080")
-	err := http.ListenAndServe(":8080", nil)
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+
+	log.Println("[INFO]\nStarted to listen on http://localhost:" + port)
+	err := http.ListenAndServe(":" + port, nil)
 	if err != nil {
 		return
 	}
